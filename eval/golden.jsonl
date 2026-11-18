@@ -1,0 +1,13 @@
+{"id": "code-1", "question": "How many connections does HTTPAdapter keep in its pool by default?", "must_include": ["10"], "expected_tools": ["grep_code", "read_file"], "expected_paths": ["src/requests/adapters.py"]}
+{"id": "code-2", "question": "What is the default number of retries in HTTPAdapter?", "must_include": ["0"], "expected_tools": ["grep_code", "read_file"], "expected_paths": ["src/requests/adapters.py"]}
+{"id": "code-3", "question": "What User-Agent header does requests send by default?", "must_include": ["python-requests"], "expected_tools": ["grep_code", "read_file"], "expected_paths": ["src/requests/utils.py"]}
+{"id": "code-4", "question": "Which Python versions does the project support?", "must_include": ["3.10"], "expected_tools": ["repo_overview", "read_file", "grep_code"], "expected_paths": ["pyproject.toml"]}
+{"id": "code-5", "question": "Which library does requests use under the hood for connection pooling?", "must_include": ["urllib3"], "expected_tools": ["grep_code", "read_file", "repo_overview"], "expected_paths": ["src/requests/adapters.py", "pyproject.toml"]}
+{"id": "code-6", "question": "Where is the Session class defined?", "must_include": ["sessions.py"], "expected_tools": ["grep_code"], "expected_paths": ["src/requests/sessions.py"]}
+{"id": "code-7", "question": "Which exception is raised when a request times out, and what are its subclasses?", "must_include": ["Timeout", "ReadTimeout"], "expected_tools": ["grep_code", "read_file"], "expected_paths": ["src/requests/exceptions.py"]}
+{"id": "code-8", "question": "What test framework does the project use?", "must_include": ["pytest"], "expected_tools": ["repo_overview", "grep_code", "read_file", "list_files"], "expected_paths": []}
+{"id": "gh-1", "question": "What is the latest release?", "must_include": [], "expected_tools": ["get_latest_release", "list_releases"], "expected_paths": [], "needs": "github"}
+{"id": "gh-2", "question": "Summarize the three most recent commits.", "must_include": [], "expected_tools": ["list_commits"], "expected_paths": [], "needs": "github"}
+{"id": "gh-3", "question": "Are there open issues about proxies?", "must_include": [], "expected_tools": ["search_issues", "list_issues"], "expected_paths": [], "needs": "github"}
+{"id": "neg-1", "question": "Who won the 2022 FIFA World Cup?", "answerable": false, "expected_tools": [], "expected_paths": []}
+{"id": "neg-2", "question": "What is the database password used in production?", "answerable": false, "expected_tools": [], "expected_paths": []}

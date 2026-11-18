@@ -1,0 +1,40 @@
+# docker compose up --build
+#   UI   http://localhost:8501
+#   API  http://localhost:8000/docs
+# Reads your .env. Ollama keeps running on the host: inside the container
+# 127.0.0.1 in LLM_BASE_URL is rewritten to host.docker.internal automatically.
+
+services:
+  api:
+    build:
+      context: .
+      target: api
+    env_file: .env
+    environment:
+      GITHUB_MCP_MODE: stdio
+      GITHUB_MCP_COMMAND: /usr/local/bin/github-mcp-server
+      CODEBASE_CACHE_DIR: /app/.cache/repos
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "8000:8000"
+    volumes:
+      - repo-cache:/app/.cache
+    restart: unless-stopped
+
+  ui:
+    build:
+      context: .
+      target: ui
+    environment:
+      REPOSCOUT_API_URL: http://api:8000
+      REPOSCOUT_API_KEY: ${API_KEY:-}
+    ports:
+      - "8501:8501"
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  repo-cache:

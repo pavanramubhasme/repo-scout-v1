@@ -1,0 +1,37 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+env:
+  GITHUB_MCP_VERSION: v2.2.0
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v7
+      - name: Install dependencies (fails if uv.lock is stale)
+        run: uv sync --locked
+      - name: Lint
+        run: uv run ruff check .
+      - name: Install the GitHub MCP server binary (for the real-server schema test)
+        run: |
+          mkdir -p "$HOME/bin"
+          curl -sSL "https://github.com/github/github-mcp-server/releases/download/${GITHUB_MCP_VERSION}/github-mcp-server_Linux_x86_64.tar.gz" \
+            | tar xz -C "$HOME/bin" github-mcp-server
+          echo "GITHUB_MCP_BINARY=$HOME/bin/github-mcp-server" >> "$GITHUB_ENV"
+      - name: Tests
+        run: uv run pytest
+
+  docker:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v7
+      - name: Build API image
+        run: docker build --target api -t repo-scout-api .
+      - name: Build UI image
+        run: docker build --target ui -t repo-scout-ui .
